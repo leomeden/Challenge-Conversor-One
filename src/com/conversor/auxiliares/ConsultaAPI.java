@@ -15,7 +15,7 @@ public class ConsultaAPI{
                 .connectTimeout(Duration.ofSeconds(20))
                 .build();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://v6.exchangerate-api.com/v6/b1d4e2b12c4a0efd19f853e2/latest/USD"))
+                .uri(URI.create("https://v6.exchangerate-api.com/v6/b1d4e2b12c4a0efd19f853e1/latest/USD"))
                 .build();
         HttpResponse<String> response = client
                 .send(request, HttpResponse.BodyHandlers.ofString());

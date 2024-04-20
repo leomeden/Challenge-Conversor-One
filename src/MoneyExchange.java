@@ -3,12 +3,11 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 
 
-import com.conversor.auxiliares.Color;
-import com.conversor.auxiliares.ConsultaAPI;
-import com.conversor.auxiliares.Entrada;
-import com.conversor.auxiliares.Menu;
+import com.conversor.auxiliares.*;
 import com.conversor.excepciones.ErrorEnRequest;
 import com.conversor.excepciones.OpcionIncorrectaMenu;
+import com.conversor.models.TasaDeCambio;
+import com.google.gson.Gson;
 
 public class MoneyExchange {
     public static void main(String[] args)  {
@@ -26,16 +25,43 @@ public class MoneyExchange {
             salir = true;
             System.out.println("La opción elegida es: " + opcion);
 
+            valorAConvertir = Entrada.ValorDesde();
+            System.out.println("El valor a convertir es: " + valorAConvertir);
+
+            respuesta = ConsultaAPI.consulta();
+            System.out.println(respuesta);
+
+
+            Gson gson = new Gson();
+            TasaDeCambio tasas = gson.fromJson(respuesta, TasaDeCambio.class);
+
+            System.out.println("Peso Argentino: " + tasas.getRates().getArs());
+            System.out.println("Real Brasileño: " + tasas.getRates().getBrl());
+            System.out.println("Peso Colombianoo: " + tasas.getRates().getCop());
+
+            System.out.println(gson.toJson(tasas).indent(3));
+
+            Conversion conversion = new Conversion(opcion);
+            String resultado = conversion.convertir(valorAConvertir, tasas);
+            System.out.println(resultado);
+
+
         } catch (OpcionIncorrectaMenu e) {
             System.out.println(Color.doRed(e.getMessage()));
         } catch (InputMismatchException e) {
             System.out.println(Color.doRed("Debe ingresar un número"));
+        } catch (ErrorEnRequest e) {
+            System.out.println(e.getMessage());
+        } catch (IOException | InterruptedException e) {
+            //throw new RuntimeException(e);
+            System.out.println("Ocurrio un error inesperado en la consulta a la API");
+            System.out.println(e.getMessage());
         }
 
-        valorAConvertir = Entrada.ValorDesde();
-        System.out.println("El valor a convertir es: " + valorAConvertir);
 
 
+
+        /*
         try {
             respuesta = ConsultaAPI.consulta();
             System.out.println(respuesta);
@@ -46,6 +72,7 @@ public class MoneyExchange {
             System.out.println("Ocurrio un error inesperado en la consulta a la API");
             System.out.println(e.getMessage());
         }
+        */
 
     }
 
