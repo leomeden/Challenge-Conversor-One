@@ -10,7 +10,6 @@ public class Conversion {
     }
 
     public String convertir(float valor, TasaDeCambio tasa){
-        System.out.println("caso" + opcion);
         switch (this.opcion){
             case 1:
                 return valor + " Dolares equivalen a " + valor * tasa.getRates().getArs() + " Pesos Argentinos";

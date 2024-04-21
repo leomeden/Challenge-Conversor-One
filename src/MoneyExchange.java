@@ -13,6 +13,7 @@ public class MoneyExchange {
     public static void main(String[] args)  {
 
     boolean salir = false;
+    boolean continuar = true;
     int opcion;
     float valorAConvertir;
     String respuesta;
@@ -23,28 +24,41 @@ public class MoneyExchange {
             //permite ingresar los valores minimo y maximo a ingresar como opción
             opcion = Entrada.OpcionMenu(1, 7);
 
-            if(opcion > 0 && opcion <7){
-                //System.out.println("La opción elegida es: " + opcion);
+            if(opcion != 7){
 
                 valorAConvertir = Entrada.ValorDesde();
-                //System.out.println("El valor a convertir es: " + valorAConvertir);
 
                 respuesta = ConsultaAPI.consulta();
-                //System.out.println(respuesta);
 
                 Gson gson = new Gson();
                 TasaDeCambio tasas = gson.fromJson(respuesta, TasaDeCambio.class);
-/*
-                System.out.println("Peso Argentino: " + tasas.getRates().getArs());
-                System.out.println("Real Brasileño: " + tasas.getRates().getBrl());
-                System.out.println("Peso Colombianoo: " + tasas.getRates().getCop());
 
-                System.out.println(gson.toJson(tasas).indent(3));
-*/
                 Conversion conversion = new Conversion(opcion);
                 String resultado = conversion.convertir(valorAConvertir, tasas);
                 System.out.println(resultado);
-            }else{
+
+                while(continuar) {
+                    try{
+                        String entrada = Entrada.Continuar();
+                        if(entrada.equals("n") || entrada.equals("N")){
+                            salir = true;
+                            continuar = false;
+                        }
+                        if(entrada.equals("s") || entrada.equals("S")){
+                            continuar = false;
+                        }
+                    } catch (OpcionIncorrectaMenu e) {
+                        System.out.println(Color.doRed(e.getMessage()));
+                    } catch (InputMismatchException e) {
+                        System.out.println(Color.doRed("Valor ingresado incorrecto"));
+                    }
+                }
+                continuar = true;
+
+
+
+            } else{
+
                 salir = true;
             }
 
@@ -60,6 +74,7 @@ public class MoneyExchange {
             System.out.println("Ocurrio un error inesperado en la consulta a la API");
             System.out.println(e.getMessage());
         }
+
 
     }
 

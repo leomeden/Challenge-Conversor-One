@@ -43,11 +43,21 @@ public class Entrada {
 
     }
 
+    public static String Continuar() throws InputMismatchException, OpcionIncorrectaMenu {
 
-    public static float ValorHasta() throws InputMismatchException{
+        System.out.println("\nDesea continuar? s/n");
         Scanner teclado = new Scanner(System.in);
-        return teclado.nextFloat();
+
+        String opcionElegida = teclado.nextLine();
+
+        if (opcionElegida.equals("s") || opcionElegida.equals("S") || opcionElegida.equals("n") || opcionElegida.equals("N")) {
+            return opcionElegida;
+        } else {
+            throw new OpcionIncorrectaMenu(Color.doRed("Opción incorrecta!"));
+        }
+
     }
+
 }
 
 
